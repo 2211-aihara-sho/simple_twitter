@@ -133,8 +133,8 @@ public class UserService {
 				}.getClass().getEnclosingMethod().getName());
 		Connection connection = null;
 		try {
-//			課題①で追記するコード
-			if(!StringUtils.isBlank(user.getPassword())) {
+			//			課題①で追記するコード
+			if (!StringUtils.isBlank(user.getPassword())) {
 				// パスワード暗号化
 				String encPassword = CipherUtil.encrypt(user.getPassword());
 				user.setPassword(encPassword);
@@ -153,6 +153,28 @@ public class UserService {
 			log.log(Level.SEVERE, new Object() {
 			}.getClass().getEnclosingClass().getName() +
 					" : " + e.toString(), e);
+			throw e;
+		} finally {
+			close(connection);
+		}
+	}
+
+//	課題③で追記するコード
+	/*
+	* String型の引数をもつ、selectメソッドを追加する
+	*/
+	public User select(String account) {
+		Connection connection = null;
+		try {
+			connection = getConnection();
+			User user = new UserDao().select(connection, account);
+			commit(connection);
+			return user;
+		} catch (RuntimeException e) {
+			rollback(connection);
+			throw e;
+		} catch (Error e) {
+			rollback(connection);
 			throw e;
 		} finally {
 			close(connection);

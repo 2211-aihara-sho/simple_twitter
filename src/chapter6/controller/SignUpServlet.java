@@ -53,12 +53,14 @@ public class SignUpServlet extends HttpServlet {
 				}.getClass().getEnclosingMethod().getName());
 		List<String> errorMessages = new ArrayList<String>();
 		User user = getUser(request);
+
 		if (!isValid(user, errorMessages)) {
 			request.setAttribute("errorMessages", errorMessages);
 			request.getRequestDispatcher("signup.jsp").forward(request, response);
 			return;
 		}
 		new UserService().insert(user);
+
 		response.sendRedirect("./");
 	}
 
@@ -95,6 +97,14 @@ public class SignUpServlet extends HttpServlet {
 		} else if (20 < account.length()) {
 			errorMessages.add("アカウント名は20文字以下で入力してください");
 		}
+
+//		課題③で追記するコード
+//		重複するユーザーがいないか確認
+		User duplicationUser = new UserService().select(account);
+		if (duplicationUser != null) {
+			errorMessages.add("すでに存在するアカウントです");
+		}
+
 		if (StringUtils.isEmpty(password)) {
 			errorMessages.add("パスワードを入力してください");
 		}
