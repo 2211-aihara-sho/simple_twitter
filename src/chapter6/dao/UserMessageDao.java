@@ -29,8 +29,9 @@ public class UserMessageDao {
 		InitApplication application = InitApplication.getInstance();
 		application.init();
 	}
-
-	public List<UserMessage> select(Connection connection, int num) {
+//	課題②で追記するコード
+//	引数Integer型のidを追加
+	public List<UserMessage> select(Connection connection, Integer id, int num) {
 		log.info(new Object() {
 		}.getClass().getEnclosingClass().getName() +
 				" : " + new Object() {
@@ -46,11 +47,16 @@ public class UserMessageDao {
 			sql.append(" users.name as name, ");
 			sql.append(" messages.created_date as created_date ");
 			sql.append("FROM messages ");
-
 			sql.append("INNER JOIN users ");
 			sql.append("ON messages.user_id = users.id ");
+			if(id != null) {
+				sql.append("WHERE messages.user_id = ? ");
+			}
 			sql.append("ORDER BY created_date DESC limit " + num);
 			ps = connection.prepareStatement(sql.toString());
+			if(id != null) {
+				ps.setInt(1, id);
+			}
 			ResultSet rs = ps.executeQuery();
 			List<UserMessage> messages = toUserMessages(rs);
 			return messages;
