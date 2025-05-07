@@ -62,4 +62,28 @@ public class MessageDao {
 			close(ps);
 		}
 	}
+
+//	仕様追加①つぶやき削除で追記するコード
+	public void delete(Connection connection, int id) {
+
+		log.info(new Object(){}.getClass().getEnclosingClass().getName()+
+				" : "+ new Object(){}.getClass().getEnclosingMethod().getName());
+
+		PreparedStatement ps = null;
+		try {
+			String sql = "DELETE FROM messages WHERE id =  ? ";
+
+			ps = connection.prepareStatement(sql.toString());
+
+			ps.setInt(1, id);
+
+			ps.executeUpdate();
+		} catch (SQLException e) {
+			log.log(Level.SEVERE, new Object() {
+			}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
+			throw new SQLRuntimeException(e);
+		} finally {
+			close(ps);
+		}
+	}
 }

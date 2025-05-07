@@ -78,6 +78,13 @@
 							pattern="yyyy/MM/dd HH:mm:ss" />
 					</div>
 				</div>
+				<%-- 課題④追記するコード --%>
+				<c:if test="${ not empty loginUser and loginUser.id == message.userId}" >
+					<form  action="deleteMessage" method="post">
+				        <input type="hidden" name="message_id" value="${message.id}">
+						<input id = "btn" type="submit" value=" 削除 ">
+					</form>
+				</c:if>
 			</c:forEach>
 		</div>
 		<div class="copyright">Copyright(c)YourName</div>
