@@ -84,6 +84,12 @@
 				        <input type="hidden" name="message_id" value="${message.id}">
 						<input id = "btn" type="submit" value=" 削除 ">
 					</form>
+
+					<%-- 仕様追加②で追記するコード --%>
+					<form  action="edit">
+                        <input type="hidden" name="message_id" value="${message.id}">
+                        <input type="submit" value=" 編集 ">
+                    </form>
 				</c:if>
 			</c:forEach>
 		</div>
