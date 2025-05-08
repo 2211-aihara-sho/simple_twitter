@@ -67,6 +67,7 @@ public class MessageDao {
 	}
 
 //	仕様追加②で追記するコード
+//	打鍵テスト①で追記するコード
 	private List<Message> toMessages(ResultSet rs) throws SQLException {
 
 		log.info(new Object(){}.getClass().getEnclosingClass().getName()+
@@ -78,6 +79,7 @@ public class MessageDao {
 				Message message = new Message();
 				message.setId(rs.getInt("id"));
 				message.setText(rs.getString("text"));
+				message.setUserId(rs.getInt("user_id"));
 				message.setCreatedDate(rs.getTimestamp("created_date"));
 				message.setUpdatedDate(rs.getTimestamp("updated_date"));
 

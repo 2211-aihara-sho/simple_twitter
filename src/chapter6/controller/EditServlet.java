@@ -15,6 +15,7 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.lang.StringUtils;
 
 import chapter6.beans.Message;
+import chapter6.beans.User;
 import chapter6.exception.NoRowsUpdatedRuntimeException;
 import chapter6.logging.InitApplication;
 import chapter6.service.MessageService;
@@ -42,12 +43,14 @@ public class EditServlet extends HttpServlet {
 
 		Message message = null;
 
+//		打鍵テスト①で追記するコード
 		if (!StringUtils.isBlank(messageId) && messageId.matches("^[0-9]*$")) {
 			int id = Integer.parseInt(messageId);
 			message = new MessageService().select(id);
 		}
 
-		if(message != null) {
+		User user = (User) session.getAttribute("loginUser");
+		if(message != null && user.getId() == message.getUserId() ) {
 			request.setAttribute("message", message);
 			request.getRequestDispatcher("edit.jsp").forward(request, response);
 		} else {
