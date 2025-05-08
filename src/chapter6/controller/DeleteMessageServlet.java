@@ -15,7 +15,7 @@ import chapter6.service.MessageService;
 public class DeleteMessageServlet extends HttpServlet {
 	Logger log = Logger.getLogger("twitter");
 
-//	仕様追加①つぶやき削除で追記するコード
+//	仕様追加①で追記するコード
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {

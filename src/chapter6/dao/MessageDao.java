@@ -63,7 +63,7 @@ public class MessageDao {
 		}
 	}
 
-//	仕様追加①つぶやき削除で追記するコード
+//	仕様追加①で追記するコード
 	public void delete(Connection connection, int id) {
 
 		log.info(new Object(){}.getClass().getEnclosingClass().getName()+
