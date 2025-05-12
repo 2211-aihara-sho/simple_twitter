@@ -53,7 +53,12 @@ public class TopServlet extends HttpServlet {
 //		* MessageServiceのselectに引数としてString型のuser_idを追加
 //		*/
 		String userId = request.getParameter("user_id");
-		List<UserMessage> messages = new MessageService().select(userId);
+//		仕様追加④で追記するコード
+		String start = request.getParameter("start");
+		String end = request.getParameter("end");
+		List<UserMessage> messages = new MessageService().select(userId, start, end);
+//		仕様追加④で削除するコード
+//		List<UserMessage> messages = new MessageService().select(userId);
 //		仕様追加③で追記するコード
 		List<UserComment> comments = new CommentService().select();
 //		課題②で削除するコード

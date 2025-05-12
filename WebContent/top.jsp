@@ -50,6 +50,18 @@
 			</div>
 			<c:remove var="errorMessages" scope="session" />
 		</c:if>
+
+		<%-- 仕様追加④で追記するコード --%>
+		<c:if test="${ isShowMessageForm }">
+			<form action="">
+				日付<input type="date" name="start" value="${start}">
+				～
+				<input type="date" name="end" value="${end}">
+				<input type="submit" value="絞り込み">
+			</form>
+		</c:if>
+
+
 		<div class="form-area">
 			<c:if test="${ isShowMessageForm }">
 				<form action="message" method="post">
