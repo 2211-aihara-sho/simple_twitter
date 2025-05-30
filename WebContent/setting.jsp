@@ -20,6 +20,8 @@
 					</c:forEach>
 				</ul>
 			</div>
+			<%-- ログインフィルターで追記するコード --%>
+			<c:remove var="errorMessages" scope="session" />
 		</c:if>
 		<form action="setting" method="post">
 			<br /> <input name="id" value="${user.id}" id="id" type="hidden" />

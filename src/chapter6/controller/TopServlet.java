@@ -11,8 +11,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import chapter6.beans.User;
+import chapter6.beans.UserComment;
 import chapter6.beans.UserMessage;
 import chapter6.logging.InitApplication;
+import chapter6.service.CommentService;
 import chapter6.service.MessageService;
 
 @WebServlet(urlPatterns = { "/index.jsp" })
@@ -44,8 +46,26 @@ public class TopServlet extends HttpServlet {
 		if (user != null) {
 			isShowMessageForm = true;
 		}
-		List<UserMessage> messages = new MessageService().select();
+//		課題②で追記するコード
+//		/*
+//		* String型のuser_idの値をrequest.getParameter("user_id")で
+//		* JSPから受け取るように設定
+//		* MessageServiceのselectに引数としてString型のuser_idを追加
+//		*/
+		String userId = request.getParameter("user_id");
+//		仕様追加④で追記するコード
+		String start = request.getParameter("start");
+		String end = request.getParameter("end");
+		List<UserMessage> messages = new MessageService().select(userId, start, end);
+//		仕様追加④で削除するコード
+//		List<UserMessage> messages = new MessageService().select(userId);
+//		仕様追加③で追記するコード
+		List<UserComment> comments = new CommentService().select();
+//		課題②で削除するコード
+//		List<UserMessage> messages = new MessageService().select();
 		request.setAttribute("messages", messages);
+//		仕様追加③で追記するコード
+		request.setAttribute("comments", comments);
 		request.setAttribute("isShowMessageForm", isShowMessageForm);
 		request.getRequestDispatcher("/top.jsp").forward(request, response);
 	}

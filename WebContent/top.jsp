@@ -8,7 +8,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>簡易Twitter</title>
+<title>簡易Twitter  </title>
 <link href="./css/style.css" rel="stylesheet" type="text/css">
 </head>
 <body>
@@ -50,6 +50,18 @@
 			</div>
 			<c:remove var="errorMessages" scope="session" />
 		</c:if>
+
+		<%-- 仕様追加④で追記するコード --%>
+		<c:if test="${ isShowMessageForm }">
+			<form action="">
+				日付<input type="date" name="start" value="${start}">
+				～
+				<input type="date" name="end" value="${end}">
+				<input type="submit" value="絞り込み">
+			</form>
+		</c:if>
+
+
 		<div class="form-area">
 			<c:if test="${ isShowMessageForm }">
 				<form action="message" method="post">
@@ -63,17 +75,64 @@
 			<c:forEach items="${messages}" var="message">
 				<div class="message">
 					<div class="account-name">
-						<span class="account"><c:out value="${message.account}" /></span>
-						<span class="name"><c:out value="${message.name}" /></span>
+						<span class="account">
+							<%-- 課題②追記するコード --%>
+							<a href="./?user_id=<c:out value="${message.userId}"/> ">
+								<c:out value="${message.account}" />
+							</a>
+						</span> <span class="name"><c:out value="${message.name}" /></span>
 					</div>
 					<div class="text">
-						<c:out value="${message.text}" />
+					<%-- 打鍵テスト①で追記するコード --%>
+						<pre><c:out value="${message.text}" /></pre>
 					</div>
 					<div class="date">
 						<fmt:formatDate value="${message.createdDate}"
 							pattern="yyyy/MM/dd HH:mm:ss" />
 					</div>
 				</div>
+				<%-- 仕様追加①で追記するコード --%>
+				<c:if test="${ not empty loginUser and loginUser.id == message.userId}" >
+					<form  action="deleteMessage" method="post">
+				        <input type="hidden" name="message_id" value="${message.id}">
+						<input id = "btn" type="submit" value=" 削除 ">
+					</form>
+
+					<%-- 仕様追加②で追記するコード --%>
+					<form  action="edit">
+                        <input type="hidden" name="message_id" value="${message.id}">
+                        <input type="submit" value=" 編集 ">
+                    </form>
+				</c:if>
+
+				<%-- 仕様追加③で追記するコード --%>
+				<c:if test="${ isShowMessageForm }">
+					<form action="comment" method="post">
+						<input type="hidden" name="message_id" value="${message.id}">
+						返信<br />
+						<textarea name="text" cols="100" rows="5" class="tweet-box"></textarea>
+						<br />
+						<input type="submit" value="返信">（140文字まで）
+					</form>
+				</c:if>
+
+				<c:forEach items="${comments}" var="comment">
+					<c:if test="${message.id == comment.messageId}">
+						<div class="comment">
+							<div class="account-name">
+								<span class="account">
+									<a href="./?user_id=<c:out value="${comment.userId}"/> ">
+										<c:out value="${comment.account}" />
+									</a>
+								</span>
+								<span class="name"><c:out value="${comment.name}" /></span>
+							</div>
+							<div class="text"><pre><c:out value="${comment.text}" /></pre></div>
+							<div class="date"><fmt:formatDate value="${comment.createdDate}" pattern="yyyy/MM/dd HH:mm:ss" /></div>
+						</div>
+					</c:if>
+				</c:forEach>
+
 			</c:forEach>
 		</div>
 		<div class="copyright">Copyright(c)YourName</div>

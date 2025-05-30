@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.commons.lang.StringUtils;
+
 import chapter6.beans.User;
 import chapter6.exception.NoRowsUpdatedRuntimeException;
 import chapter6.exception.SQLRuntimeException;
@@ -183,9 +185,11 @@ public class UserDao {
 			sql.append("UPDATE users SET ");
 			sql.append(" account = ?, ");
 			sql.append(" name = ?, ");
-
 			sql.append(" email = ?, ");
-			sql.append(" password = ?, ");
+//			課題①で追記するコード
+			if(!StringUtils.isBlank(user.getPassword())) {
+				sql.append(" password = ?, ");
+			}
 			sql.append(" description = ?, ");
 			sql.append(" updated_date = CURRENT_TIMESTAMP ");
 			sql.append("WHERE id = ?");
@@ -193,9 +197,15 @@ public class UserDao {
 			ps.setString(1, user.getAccount());
 			ps.setString(2, user.getName());
 			ps.setString(3, user.getEmail());
-			ps.setString(4, user.getPassword());
-			ps.setString(5, user.getDescription());
-			ps.setInt(6, user.getId());
+//			課題①で追記するコード
+			if(!StringUtils.isBlank(user.getPassword())) {
+				ps.setString(4, user.getPassword());
+				ps.setString(5, user.getDescription());
+				ps.setInt(6, user.getId());
+			} else {
+				ps.setString(4, user.getDescription());
+				ps.setInt(5, user.getId());
+			}
 			int count = ps.executeUpdate();
 			if (count == 0) {
 				log.log(Level.SEVERE, "更新対象のレコードが存在しません", new
@@ -208,6 +218,33 @@ public class UserDao {
 			log.log(Level.SEVERE, new Object() {
 			}.getClass().getEnclosingClass().getName() +
 					" : " + e.toString(), e);
+			throw new SQLRuntimeException(e);
+		} finally {
+			close(ps);
+		}
+	}
+
+//	課題③で追記するコード
+	/*
+	* String型のaccountを引数にもつ、selectメソッドを追加する
+	*/
+	public User select(Connection connection, String account) {
+		PreparedStatement ps = null;
+		try {
+			String sql = "SELECT * FROM users WHERE account = ?";
+			ps = connection.prepareStatement(sql);
+			ps.setString(1, account);
+
+			ResultSet rs = ps.executeQuery();
+			List<User> users = toUsers(rs);
+			if (users.isEmpty()) {
+				return null;
+			} else if (2 <= users.size()) {
+				throw new IllegalStateException("ユーザーが重複しています");
+			} else {
+				return users.get(0);
+			}
+		} catch (SQLException e) {
 			throw new SQLRuntimeException(e);
 		} finally {
 			close(ps);

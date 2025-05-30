@@ -21,6 +21,8 @@
 					</c:forEach>
 				</ul>
 			</div>
+			<%-- ログインフィルターで追記するコード --%>
+			<c:remove var="errorMessages" scope="session" />
 		</c:if>
 		<form action="signup" method="post">
 			<br /> <label for="name">名前</label> <input name="name" id="name" />(名前はあなたの公開プロフィールに表示されます)
